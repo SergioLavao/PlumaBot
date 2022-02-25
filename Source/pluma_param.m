@@ -8,7 +8,7 @@ PLUMA.name='PLUMA';
  
 q = [0 0];       
 
-ForwardKinematics( PLUMA, q , 2)
+ForwardKinematics( PLUMA, q )
 
 PLUMA.plot3d(q , 'alpha', 0);
 PLUMA.teach(q);         

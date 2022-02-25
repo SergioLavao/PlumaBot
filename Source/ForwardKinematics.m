@@ -1,9 +1,9 @@
-function T = ForwardKinematics( Robot, q)
+function T = ForwardKinematics( Robot, q )
     
     n = size(q);
     T = eye(4);
     
-    for i = 1: 6
+    for i = 1: n
 
         alpha = Robot.alpha(i);
         a = Robot.a(i);
