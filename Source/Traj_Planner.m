@@ -45,7 +45,6 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
        
         Velocities = Input4;
         times  = Input3;
-        Ts = 0.01;
 
         n = size(Traj); n = n(1);
 
@@ -100,7 +99,7 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
            
         end
         S(1,:) = [];
-        POS = S
+        POS = S;
     end
 
     Robot_Traj = POS;
