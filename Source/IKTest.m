@@ -1,37 +1,71 @@
 clear all
+
 [ROBOT, PARAM] = puma_param();
 
-line = [0.5 0.1 0.2; 0.6 0.4 -0.2];
+line = [0.6 -0.3 0.1; 0.6 0.2 0.1];%Taller
+line2 = [0.5 0.1 0.2; 0.6 0.4 -0.2];
 circle = [0.5 0.1 0.2; 0.7 0 0.2; 0.5 -0.1 0.2; 0.3 0 0.2; 0.5 0.1 0.2];
 
 TrajCubic = Traj_Planner(2, circle, [1 2 3 4 5],[0 0 0 ; 0 0 0],0.1);
-TrajPrism = Traj_Planner(1,line,1,0.2,0.05);
+TrajPrism = Traj_Planner(1,line2,1,0.2,0.05);
 
-TrajTotal = [TrajCubic;TrajPrism]
-
-[PT, axis] = size(TrajPrism);
-[PTCUBIC, axis] = size(TrajCubic);
+TrajTotal = [TrajCubic;TrajPrism];
 [PTTotal, axis] = size(TrajTotal);
 
 T = eye(4);
 
-q_traj(1,:) = [0 0 0 0 0 0];
 IdealTraj(:,:,1) = zeros(4);
+
 q_trajRobot(1,:) = [0 0 0 0 0 0];
+q_traOptjRobot( 1 ,:) = [0 0 0 0 0 0];
 
 q = q_trajRobot(1,:);
+
+T_OptTraj = [0 0 0];%IK With control System
+T_Traj = [0 0 0];%IK Without control, e = 0
 
 for i = 1 : PTTotal
 
     T(1:3,4) = TrajTotal(i,:);
     
-    %q_trajRobot( i + 1 ,:) = ROBOT.ikine( T );
+    q_traOptjRobot( i + 1 ,:) = ROBOT.ikine( T );
+    T_Temp = ForwardKinematics( ROBOT, q_traOptjRobot(i + 1 ,:) );
+    T_OptTraj = [ T_OptTraj ; transpose(T_Temp(1:3,4)) ];
+
     q_trajRobot( i + 1 , :) = InverseKinematics( ROBOT , T ,  q_trajRobot( i ,:) );
+
+    T_Temp = ForwardKinematics( ROBOT, q_trajRobot(i + 1 ,:) );
+    T_Traj = [ T_Traj ; transpose(T_Temp(1:3,4)) ];
+
+    Error(i) = sqrt(sum((T_OptTraj(i,:) - T_Traj(i,:)) .^ 2)) * 100; %Error % normalizado a 1m, 1m -> 100% error
+
 end
 
 plot3d( ROBOT, q_trajRobot);
+hold all
+
+figure()
+
+plot3( TrajTotal(:,1), TrajTotal(:,2), TrajTotal(:,3), 'o' );
 hold on
-TrajCubic = Traj_Planner(2, circle, [1 2 3 4 5],[0 0 0 ; 0 0 0],0.1);
+grid on
+
+T_OptTraj(1,:) = [];
+plot3( T_OptTraj(:,1), T_OptTraj(:,2), T_OptTraj(:,3), '-' );
 hold on
-TrajPrism = Traj_Planner(1,line,1,0.2,0.05);
+grid on
+
+T_Traj(1,:) = [];
+plot3( T_Traj(:,1), T_Traj(:,2), T_Traj(:,3), '*' );
 hold on
+grid on
+
+figure()
+plot(Error(:))
+ylim([0 100])
+xlim([0 53])
+title('Error % based on samples')
+xlabel('Sample[n]') 
+ylabel('Error[%]') 
+hold on
+grid on
