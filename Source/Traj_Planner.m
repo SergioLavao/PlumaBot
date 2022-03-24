@@ -35,10 +35,6 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
             POS(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
         end
                
-%         plot3( POS(:,1), POS(:,2), POS(:,3), 'o' )
-%         hold on
-%         grid on
-   
     end
    
     if Type == 2
@@ -93,10 +89,7 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
 
             end
             S = [S; CUR_POS];
-%             plot3( S(:,1), S(:,2), S(:,3), 'o' );
-%             hold on
-%             grid on
-           
+
         end
         S(1,:) = [];
         POS = S;
