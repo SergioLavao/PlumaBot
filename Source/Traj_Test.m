@@ -26,6 +26,8 @@ for i = 1 : PT
     
 end
 
+figure() 
+
 plot3d( Robot, q_trajRobot);
 hold all
 
