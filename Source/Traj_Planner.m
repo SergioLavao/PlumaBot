@@ -5,9 +5,8 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
         AP = Input4;
         VelMax = Input3;
        
-
         T = norm(Traj(2, :) - Traj(1, :)) / (VelMax * (1 - AP));
-               
+ 
         n = T / Ts;
         tao = T * AP;
 
@@ -22,7 +21,7 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
         t = [ 0 : Ts : tao];
         for i = 1: k
             POS(i,:) = 1/(norm(P_tao-Traj(1,:))) * (0.5*a*t(i)*t(i)) * (P_tao - Traj(1,:)) + Traj(1,:);
-            VEL(i,:) = 1/(norm(P_tao-Traj(1,:))) * (0.5*a*t(i)*t(i)) * (P_tao - Traj(1,:)) + Traj(1,:);
+            VEL(i,:) = 1/(norm(P_tao-Traj(1,:))) * (a*t(i)) * (P_tao - Traj(1,:));
             ACC(i,:) = 1/(norm(P_tao-Traj(1,:))) * (0.5*a*t(i)*t(i)) * (P_tao - Traj(1,:)) + Traj(1,:);
         end
 
@@ -31,14 +30,14 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
         k2 = round(n - 2*k);
         for i = 1: k2
             POS(i + k,:) = ( (VelMax*t2(i)* (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) ) + P_tao;
-            VEL(i + k,:) = ( (VelMax*t2(i)* (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) ) + P_tao;
+            VEL(i + k,:) = ( (VelMax * (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) );
             ACC(i + k,:) = ( (VelMax*t2(i)* (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) ) + P_tao;
         end
 
         %Tramo 3
-        for i = 1: k
+        for i = 1: k + 1
             POS(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
-            VEL(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
+            VEL(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-a*t(i)) + VelMax) * (Traj(2,:) - P_Ttao) );
             ACC(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
         end
                
@@ -81,7 +80,7 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
         V = [0 0 0];
         A = [0 0 0];
 
-        for i=1:n-1
+        for i = 1 : n - 1
 
             pt = h(i)/Ts;
             t = [0:Ts:h(i)];
@@ -91,7 +90,7 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
                 a(i,j) = (b(i+1,j) - b(i,j))/(3*h(i));
                 c(i,j) = ((1/h(i))*(Traj(i+1,j) - Traj(i,j))) - (h(i)*(2*b(i,j) + b(i+1,j))/3);
 
-                for k=1:pt
+                for k=1:pt+1
                     CUR_POS(k,j) = a(i,j)*t(k)^3 + b(i,j)*t(k)^2 + c(i,j)*t(k) + Traj(i,j);
                     CUR_VEL(k,j) = 3*a(i,j)*t(k)^2 + 2*b(i,j)*t(k) + c(i,j);
                     CUR_ACC(k,j) = 6*a(i,j)*t(k) + 2*b(i,j);

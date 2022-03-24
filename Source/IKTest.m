@@ -2,7 +2,7 @@ clear all
 
 [ROBOT, PARAM] = puma_param();
 
-line = [0.5 -0.1 0.2; 0.5 0.3 0.2];%Taller %line2 = [0.5 0.1 0.2; 0.6 0.4 -0.2];
+line = [0.5 -0.1 0.2; 0.5 0.3 0.2];%Taller
 circle = [0.5 0.1 0.2; 0.7 0 0.2; 0.5 -0.1 0.2; 0.3 0 0.2; 0.5 0.1 0.2];
 
 TrajCubic = Traj_Planner(2, circle, [1 2 3 4 5],[0 0 0 ; 0 0 0],0.1);
@@ -12,12 +12,19 @@ T = eye(4);
 T(1:3,4) = [0.6 -0.3 0.1];
 q = ROBOT.ikine( T )
 
-Traj_Test( ROBOT, TrajCubic(:,1:3), [0 0 0 0 0 0],'Prismatic Spline Trajectory')
+CurTraj = TrajPrism;
 
-[PT, axis] = size(TrajCubic)
+linetest = [0.5 0.1 0.2; 0.5 0.5 -0.4];%------------UNCOMMENT THIS FOR TEST MULTIPLE TRAJECTORIES!
+TrajLine = Traj_Planner(1,linetest,0.3,0.2,0.1);%------------UNCOMMENT THIS FOR TEST MULTIPLE TRAJECTORIES!
+%OPTIONAL: MULTIPLE TRAJECTORIES
+CurTraj = [ TrajCubic ; TrajLine ];%------------COMMENT THIS TO DISABLE MULTIPLE TRAJECTORIES!
+
+Traj_Test( ROBOT, CurTraj(:,1:3), [0 0 0 0 0 0], 'Total Trajectory')
+
+[PT, axis] = size(CurTraj)
 
 for i = 1: PT
-    NormalizedVelocity(i) = norm(TrajCubic(i,4:6));
+    NormalizedVelocity(i) = norm(CurTraj(i,4:6));
 end
 
 figure()
