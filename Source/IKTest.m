@@ -1,3 +1,4 @@
+clc
 clear all
 
 [ROBOT, PARAM] = puma_param();

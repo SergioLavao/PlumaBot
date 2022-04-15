@@ -18,11 +18,12 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
         P_Ttao =  ( (VelMax*(T-(2*tao))* (Traj(2,:) - Traj(1,:))) / norm( Traj(2,:) - Traj(1,:) ) ) + P_tao;
 
         %Tramo 1
-        t = [ 0 : Ts : tao];
+        t = [ 0 : Ts : tao + Ts];
         for i = 1: k
             POS(i,:) = 1/(norm(P_tao-Traj(1,:))) * (0.5*a*t(i)*t(i)) * (P_tao - Traj(1,:)) + Traj(1,:);
             VEL(i,:) = 1/(norm(P_tao-Traj(1,:))) * (a*t(i)) * (P_tao - Traj(1,:));
             ACC(i,:) = 1/(norm(P_tao-Traj(1,:))) * (0.5*a*t(i)*t(i)) * (P_tao - Traj(1,:)) + Traj(1,:);
+            
         end
 
         %Tramo 2
@@ -32,13 +33,17 @@ function Robot_Traj = Traj_Planner( Type, Traj, Input3, Input4, Ts)
             POS(i + k,:) = ( (VelMax*t2(i)* (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) ) + P_tao;
             VEL(i + k,:) = ( (VelMax * (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) );
             ACC(i + k,:) = ( (VelMax*t2(i)* (P_Ttao - P_tao) )/ norm(P_Ttao - P_tao) ) + P_tao;
-        end
+   
+          
+         end
 
         %Tramo 3
         for i = 1: k + 1
-            POS(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
-            VEL(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-a*t(i)) + VelMax) * (Traj(2,:) - P_Ttao) );
-            ACC(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
+           
+             POS(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
+             VEL(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-a*t(i)) + VelMax) * (Traj(2,:) - P_Ttao) );
+             ACC(i + k + k2,:) = ( 1/norm(Traj(2,:) - P_Ttao) ) * ( ((-0.5*a*t(i)*t(i)) + VelMax * t(i)) * (Traj(2,:) - P_Ttao) ) + P_Ttao;
+
         end
                
     end

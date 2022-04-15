@@ -12,5 +12,6 @@ for j = 1: pt
 end
 
 plot3d( ROBOT, q )
-hold on
+
 plot3( tarj_points( : , 1 ), tarj_points( : , 2 ), tarj_points( : , 3 ), '-o' )
+hold on
