@@ -4,14 +4,14 @@ function J = Jacobian( Robot,q )
     
     for j = n : -1 : 1
         
-        m = 6
+        m = 2;
 
         RobotIK.a = Robot.a(j:m);
         RobotIK.d = Robot.d(j:m);
         RobotIK.theta = Robot.theta(j:m);
         RobotIK.alpha = Robot.alpha(j:m);
         RobotIK.offset = Robot.offset(j:m);
-        RobotIK.n = 7 - j;
+        RobotIK.n = 3 - j;
     
         T = ForwardKinematics( RobotIK , q(j:m) );
       
