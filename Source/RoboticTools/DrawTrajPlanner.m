@@ -1,6 +1,6 @@
-clear all
+function Traj_Draw = DrawTrajPlanner
 
- drawPoint = [0.059 0.059 0;
+drawPoint = [0.059 0.059 0;
               0.068 0.075 0;
               0.068 0.049 0;
               0.047 0.000 0;
@@ -14,20 +14,20 @@ clear all
               0.013 0.036 0;
               0.034 0.059 0];
 
- [n,j]=size(drawPoint);
+[n,j]=size(drawPoint);
 
- Traj(1,:) = zeros(1,10);
+Traj_Draw(1,:) = zeros(1,10);
 
  for i = 1 : n - 1
 
      Traject = drawPoint(i:i+1,:);
-     Traj = [ Traj; Traj_Planner(1,Traject,0.01,0.2,0.05)];
+     Traj_Draw = [ Traj_Draw; Traj_Planner(1,Traject,0.01,0.2,0.05)];
 
  end
 
- [PT , Nan] = size(Traj)
+ [PT , Nan] = size(Traj_Draw)
  
- plot3( Traj(:,1), Traj(:,2), Traj(:,3), '-o' );
+ plot3( Traj_Draw(:,1), Traj_Draw(:,2), Traj_Draw(:,3), '-o' );
  hold on
  grid on
 
@@ -36,13 +36,18 @@ clear all
  grid on
 
  for i = 1: PT
-    NormalizedVelocity(i) = norm(Traj(i,4:6));
+    NormalizedVelocity(i) = norm(Traj_Draw(i,4:6));
 end
 
 figure()
+
 plot(NormalizedVelocity(:))
 title('Trajectory Velocity Profile (Magnitude)')
 xlabel('Sample[n]') 
 ylabel('Velocity[m/s]') 
 hold on
 grid on
+
+figure()
+
+end
