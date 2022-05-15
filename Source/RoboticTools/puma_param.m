@@ -30,11 +30,11 @@ function [PUMA, PARAM] = puma_param()
 
 %Visualizacion del robot.
 
-%[q,qd,qdd] = joint_traj_puma560();
+[q,qd,qdd] = joint_traj_puma560();
 
-% 
-% PUMA.plot3d(q);
-% PUMA.teach(q);         
+
+PUMA.plot3d(q);
+PUMA.teach(q);         
 
 %GUI para manejar cada articulacion     
  %Matriz de parametros dinamico del robot (para el calculo dinamico)

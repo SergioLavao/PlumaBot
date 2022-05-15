@@ -1,6 +1,6 @@
 function Traj_Draw = DrawTrajPlanner
 
-drawPoint = [0.059 0.059 0;
+drawPoint = [ 0.059 0.059 0;
               0.068 0.075 0;
               0.068 0.049 0;
               0.047 0.000 0;
