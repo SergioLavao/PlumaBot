@@ -1,4 +1,5 @@
 Ts = 0.01;
+
 qd(2,:) = [0 0];
 
 Max_Vel_1 = max(qd(:,1)) 
@@ -10,14 +11,18 @@ else
     Max_Vel = Max_Vel_2;
 end
 
-qd1_normalized = (-qd(:,1) / Max_Vel) * 250;
-qd2_normalized = (qd(:,2) / Max_Vel)  * 250;
+VelMotor = 150;
+
+qd1_normalized = (-qd(:,1) / Max_Vel) * VelMotor;
+qd2_normalized = (qd(:,2) / Max_Vel)  * VelMotor;
 
 max( qd1_normalized )
 max( qd2_normalized )
 
 serialportlist("available")
 arduino= serialport('COM3',9600);
+
+[PT, axis] = size(qd)
 
 for i = 1: PT 
     

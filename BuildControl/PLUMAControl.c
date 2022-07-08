@@ -3,8 +3,6 @@
 void Joint1()
 {
 
-
-
 }
 
 void setup() 
